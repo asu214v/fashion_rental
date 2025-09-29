@@ -27,5 +27,6 @@ urlpatterns = [
     path('notification/', include('notification.urls')),
     path('favorite/', include('favorite.urls')),
     path('schedule/', include('schedule.urls')),
+    path('hamburger/', include('hamburger.urls')),
     # 他のアプリのパスもここに追加
 ]

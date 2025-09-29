@@ -11,13 +11,11 @@
 
   <!-- ヘッダー -->
   <header class="header">
-    <button class="hamburger">☰</button>
-      <nav class="nav-menu" id="side-menu">
-        <ul>
-          <li><a href="#">メニュー項目1</a></li>
-          <li><a href="#">メニュー項目2</a></li>
-          <li><a href="#">メニュー項目3</a></li>
-        </ul>
+    <div class="hamburger">
+      <a href="{% url 'hamburger:index' %}" class="hamburger">
+        <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="hamburger">
+      </a>
+    </div>
       </nav>
       <div class="header-icons">
         <a href="{% url 'chat:index' %}" class="chat-link">

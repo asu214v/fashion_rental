@@ -23,7 +23,8 @@ header.header {
   padding: 0 10px;
 }
 
-.header-icons {
+.header-icons,
+.hamburger {
   display: flex;
   gap: 15px;
   text-decoration: none;
@@ -120,29 +121,4 @@ main#content {
   font-size: 20px;
   cursor: pointer;
   color: #333;
-}
-/* ナビゲーションメニューの基本スタイル */
-.nav-menu {
-  /* 初期状態では非表示にするための設定例 */
-  /* 画面外に隠しておくことが多いです */
-  position: fixed; /* 画面に固定 */
-  top: 0;
-  left: -250px; /* 左側に隠す */
-  width: 250px;
-  height: 100%;
-  background-color: #f8f8f8;
-  transition: left 0.3s ease; /* スムーズに開閉するためのアニメーション */
-  z-index: 100; /* 他の要素より手前に表示 */
-}
-
-/* JavaScriptで付与する「開いている状態」のクラス */
-.nav-menu.is-active {
-  left: 0; /* 画面内に移動して表示 */
-  /* 必要に応じて、コンテンツの上にオーバーレイ（暗幕）を重ねるスタイルも追加 */
-}
-
-/* ハンバーガーボタンも必要に応じてCSSで整えます */
-.hamburger {
-  cursor: pointer;
-  z-index: 101; /* メニューより手前に */
 }

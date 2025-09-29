@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'notification.apps.NotificationConfig',
     'favorite.apps.FavoriteConfig',
     'schedule.apps.ScheduleConfig',
+    'hamburger.apps.HamburgerConfig',
 ]
 
 # ミドルウェアの設定
