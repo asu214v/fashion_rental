@@ -1,0 +1,148 @@
+/* 全体リセット */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* 全体はスクロール禁止 */
+  font-family: sans-serif;
+}
+
+/* ヘッダー */
+header.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #fff;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.header-icons {
+  display: flex;
+  gap: 15px;
+  text-decoration: none;
+  color: inherit; /* 青リンク消す */
+}
+
+.header-icons .chat-link .icon {
+  margin-top: 2px; /* 好きな数値に調整 */
+}
+
+/* フッター */
+footer.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background: #fff;
+  z-index: 1000;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: space-around; /* 等間隔配置 */
+  align-items: center;
+  height: 100%;
+}
+
+.footer-nav a {
+  flex: 1; /* 横幅均等 */
+  display: flex;
+  flex-direction: column;  /* 縦に並べる */
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  font-size: 12px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.footer-nav a .icon {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+/* コンテンツ部分だけスクロール */
+main#content {
+  position: absolute;
+  top: 50px;
+  bottom: 45px;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+/* オーバーレイ (右からスライド) */
+#overlay {
+  position: absolute;
+  top: 50px;
+  bottom: 45px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  transform: translateX(100%); /* 初期は右の外に */
+  transition: transform 0.3s ease;
+  z-index: 2000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* スライドイン時 */
+#overlay.slide-in {
+  transform: translateX(0);
+}
+
+/* 閉じるボタン */
+#overlay .close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+/* ナビゲーションメニューの基本スタイル */
+.nav-menu {
+  /* 初期状態では非表示にするための設定例 */
+  /* 画面外に隠しておくことが多いです */
+  position: fixed; /* 画面に固定 */
+  top: 0;
+  left: -250px; /* 左側に隠す */
+  width: 250px;
+  height: 100%;
+  background-color: #f8f8f8;
+  transition: left 0.3s ease; /* スムーズに開閉するためのアニメーション */
+  z-index: 100; /* 他の要素より手前に表示 */
+}
+
+/* JavaScriptで付与する「開いている状態」のクラス */
+.nav-menu.is-active {
+  left: 0; /* 画面内に移動して表示 */
+  /* 必要に応じて、コンテンツの上にオーバーレイ（暗幕）を重ねるスタイルも追加 */
+}
+
+/* ハンバーガーボタンも必要に応じてCSSで整えます */
+.hamburger {
+  cursor: pointer;
+  z-index: 101; /* メニューより手前に */
+}

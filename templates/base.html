@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Fashion Rental{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <button class="hamburger">☰</button>
+      <nav class="nav-menu" id="side-menu">
+        <ul>
+          <li><a href="#">メニュー項目1</a></li>
+          <li><a href="#">メニュー項目2</a></li>
+          <li><a href="#">メニュー項目3</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <a href="{% url 'chat:index' %}" class="chat-link">
+          <img src="{% static 'images/chat.png' %}" alt="チャット" class="icon">
+        </a>
+        <a href="{% url 'notification:index' %}" class="notify-link">
+          <img src="{% static 'images/notification.png ' %}" alt="通知" class="icon">
+        </a>
+      </div>
+  </header>
+
+  <!-- コンテンツ -->
+  <main id="content">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- オーバーレイ（右からスライド用） -->
+  <div id="overlay"></div>
+
+    <footer class="footer">
+      <nav class="footer-nav">
+        <a href="{% url 'home:index' %}">
+          <img src="{% static 'images/home.png' %}" class="icon">
+          <span>ホーム</span>
+        </a>
+        <a href="{% url 'rental:index' %}">
+          <img src="{% static 'images/rental.png' %}" class="icon">
+          <span>出品</span>
+        </a>
+        <a href="{% url 'schedule:index' %}">
+          <img src="{% static 'images/schedule.png' %}" class="icon">
+          <span>カレンダー</span>
+        </a>
+        <a href="{% url 'favorite:index' %}">
+          <img src="{% static 'images/favorite.png' %}" class="icon">
+          <span>いいね</span>
+        </a>
+        <a href="{% url 'users:mypage' %}">
+          <img src="{% static 'images/mypage.png' %}" class="icon">
+          <span>マイページ</span>
+        </a>
+      </nav>
+    </footer>
+
+  <script src="{% static 'js/style.js' %}"></script>
+</body>
+</html>
