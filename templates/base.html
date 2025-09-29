@@ -12,19 +12,18 @@
   <!-- ヘッダー -->
   <header class="header">
     <div class="hamburger">
-      <a href="{% url 'hamburger:index' %}" class="hamburger">
-        <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="hamburger">
+      <a href="{% url 'hamburger:index' %}" class="hamburger-link">
+        <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="icon">
       </a>
     </div>
-      </nav>
-      <div class="header-icons">
-        <a href="{% url 'chat:index' %}" class="chat-link">
-          <img src="{% static 'images/chat.png' %}" alt="チャット" class="icon">
-        </a>
-        <a href="{% url 'notification:index' %}" class="notify-link">
-          <img src="{% static 'images/notification.png ' %}" alt="通知" class="icon">
-        </a>
-      </div>
+    <div class="header-icons">
+      <a href="{% url 'chat:index' %}" class="chat-link">
+        <img src="{% static 'images/chat.png' %}" alt="チャット" class="icon">
+      </a>
+      <a href="{% url 'notification:index' %}" class="notify-link">
+        <img src="{% static 'images/notification.png ' %}" alt="通知" class="icon">
+      </a>
+    </div>
   </header>
 
   <!-- コンテンツ -->
