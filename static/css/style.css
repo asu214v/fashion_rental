@@ -90,35 +90,54 @@ main#content {
   border-bottom: 1px solid #ddd;
 }
 
-/* オーバーレイ (右からスライド) */
-#overlay {
+/* 右メニュー用 */
+#right-menu {
   position: absolute;
   top: 50px;
   bottom: 45px;
-  left: 0;
-  right: 0;
+  right: -100%; /* 初期位置は画面外 */
   width: 100%;
+  height: 100%;
   background: #fafafa;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  transform: translateX(100%); /* 初期は右の外に */
-  transition: transform 0.3s ease;
-  z-index: 2000;
+  transition: right 0.3s ease;
+  z-index: 1000;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* スライドイン時 */
-#overlay.slide-in {
-  transform: translateX(0);
+#right-menu.from-right.slide-in {
+  right: 0;
 }
 
-/* 閉じるボタン */
-#overlay .close-btn {
+/* 左メニュー用 */
+#left-menu {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 20px;
+  top: 50px;
+  bottom: 45px;
+  left: -100%; /* 初期位置は画面外 */
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#left-menu.from-left.slide-in {
+  left: 0;
+}
+
+#left-menu .close-btn,
+#right-menu .close-btn {
+  position: absolute;
+  font-size: 28px;  /* 大きく */
+  top: 10px;
+  right: 20px;
   cursor: pointer;
-  color: #333;
+  font-weight: bold;
 }

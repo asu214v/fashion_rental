@@ -1,15 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const overlay = document.getElementById("overlay");
+  const rightMenu = document.getElementById("right-menu");
+  const leftMenu = document.getElementById("left-menu");
+
   const chatLink = document.querySelector(".chat-link");
   const notifyLink = document.querySelector(".notify-link");
+  const hamburgerLink = document.querySelector(".hamburger-link");
 
-  async function loadContent(e) {
+  // ===== リンク無効化/有効化 =====
+  function disableLinks(exceptLink) {
+    [chatLink, notifyLink, hamburgerLink].forEach(link => {
+      if (link !== exceptLink) {
+        link.style.pointerEvents = "none";
+        link.classList.add("disabled");
+      } else {
+        link.style.pointerEvents = "auto";
+        link.classList.remove("disabled");
+      }
+    });
+  }
+
+  function enableAllLinks() {
+    [chatLink, notifyLink, hamburgerLink].forEach(link => {
+      link.style.pointerEvents = "auto";
+      link.classList.remove("disabled");
+    });
+  }
+
+  // ===== 右側（チャット・通知） =====
+  async function loadRightMenu(e) {
     e.preventDefault();
-    const url = e.currentTarget.getAttribute("href");
-    const linkType = e.currentTarget.classList.contains("chat-link")
-      ? "chat"
-      : "notify";
+    disableLinks(e.currentTarget);
 
+    const url = e.currentTarget.getAttribute("href");
     try {
       const response = await fetch(url);
       const text = await response.text();
@@ -17,63 +39,80 @@ document.addEventListener("DOMContentLoaded", () => {
       const newDoc = parser.parseFromString(text, "text/html");
       const newContent = newDoc.querySelector("#content");
 
-      // 閉じるボタンを追加
-      overlay.innerHTML = `
+      rightMenu.innerHTML = `
         <span class="close-btn">&times;</span>
         ${newContent ? newContent.innerHTML : "<p>読み込みエラー</p>"}
       `;
 
-      // 1. 一旦右に戻す
-      overlay.classList.remove("slide-in");
-      overlay.style.transform = "translateX(100%)";
+      rightMenu.className = "from-right";
+      void rightMenu.offsetWidth;
+      rightMenu.classList.add("slide-in");
 
-      // 2. 強制リフロー
-      void overlay.offsetWidth;
+      rightMenu.querySelector(".close-btn")
+        .addEventListener("click", closeRightMenu);
 
-      // 3. 再度スライドイン
-      overlay.style.transform = "";
-      overlay.classList.add("slide-in");
-
-      window.history.pushState({}, "", url);
-
-      // 閉じるボタン
-      overlay.querySelector(".close-btn").addEventListener("click", closeOverlay);
-
-      // リンク無効化
-      if (linkType === "chat") {
-        chatLink.classList.add("disabled");
-        notifyLink.classList.remove("disabled");
-        notifyLink.style.pointerEvents = "none";
-        chatLink.style.pointerEvents = "auto";
-      } else {
-        notifyLink.classList.add("disabled");
-        chatLink.classList.remove("disabled");
-        chatLink.style.pointerEvents = "none";
-        notifyLink.style.pointerEvents = "auto";
-      }
-    } catch (err) {
-      overlay.innerHTML = "<p>読み込み失敗しました</p>";
-      overlay.classList.add("slide-in");
+    } catch {
+      rightMenu.innerHTML = "<p>読み込み失敗しました</p>";
     }
   }
 
-  function closeOverlay() {
-    overlay.classList.remove("slide-in");
+  function closeRightMenu() {
+    rightMenu.classList.remove("slide-in");
     setTimeout(() => {
-      overlay.innerHTML = "";
-      // 両方のリンクを有効化
-      chatLink.style.pointerEvents = "auto";
-      notifyLink.style.pointerEvents = "auto";
-      chatLink.classList.remove("disabled");
-      notifyLink.classList.remove("disabled");
+      rightMenu.innerHTML = "";
+      rightMenu.className = "";
+      enableAllLinks();
     }, 300);
   }
 
-  if (chatLink) chatLink.addEventListener("click", loadContent);
-  if (notifyLink) notifyLink.addEventListener("click", loadContent);
+  // ===== 左側（ハンバーガー） =====
+  async function loadLeftMenu(e) {
+    e.preventDefault();
+    disableLinks(e.currentTarget);
 
-  // Escapeキーで閉じる
+    const url = e.currentTarget.getAttribute("href");
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const newDoc = parser.parseFromString(text, "text/html");
+      const newContent = newDoc.querySelector("#content");
+
+      leftMenu.innerHTML = `
+        <span class="close-btn">&times;</span>
+        ${newContent ? newContent.innerHTML : "<p>読み込みエラー</p>"}
+      `;
+
+      leftMenu.className = "from-left";
+      void leftMenu.offsetWidth;
+      leftMenu.classList.add("slide-in");
+
+      leftMenu.querySelector(".close-btn")
+        .addEventListener("click", closeLeftMenu);
+
+    } catch {
+      leftMenu.innerHTML = "<p>読み込み失敗しました</p>";
+    }
+  }
+
+  function closeLeftMenu() {
+    leftMenu.classList.remove("slide-in");
+    setTimeout(() => {
+      leftMenu.innerHTML = "";
+      leftMenu.className = "";
+      enableAllLinks();
+    }, 300);
+  }
+
+  // ===== イベント登録 =====
+  chatLink?.addEventListener("click", loadRightMenu);
+  notifyLink?.addEventListener("click", loadRightMenu);
+  hamburgerLink?.addEventListener("click", loadLeftMenu);
+
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeOverlay();
+    if (e.key === "Escape") {
+      closeRightMenu();
+      closeLeftMenu();
+    }
   });
 });
