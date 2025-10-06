@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}rental{% endblock %}
-
 {% block content %}
-  <h2>レンタルページ</h2>
-  <p>ここにレンタル画面を表示します。</p>
+<h1>出品ページへ</h1>
+
+{% if message %}
+<p style="color:green;">{{ message }}</p>
+{% endif %}
+
+<a href="{% url 'rental:reg' %}"><button>商品を出品する</button></a>
+<a href="{% url 'rental:my_items' %}"><button>自分の出品を確認する</button></a>
+
 {% endblock %}
+

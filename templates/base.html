@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Fashion Rental{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
 </head>
 <body>
 
   <!-- ヘッダー -->
   <header class="header">
     <div class="hamburger">
-      <a href="{% url 'hamburger:index' %}" class="hamburger-link">
+      <a href="{% url 'hamburger:menu' %}" class="hamburger-link">
         <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="icon">
       </a>
     </div>

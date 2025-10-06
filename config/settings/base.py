@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     # ここに自分で作ったアプリを登録
     'users.apps.UsersConfig',
     'items.apps.ItemsConfig',
@@ -30,7 +31,8 @@ INSTALLED_APPS = [
     'notification.apps.NotificationConfig',
     'favorite.apps.FavoriteConfig',
     'schedule.apps.ScheduleConfig',
-    'hamburger.apps.HamburgerConfig',
+    'hamburger.apps.HamburgerConfig', 
+    'accounts.apps.AccountsConfig',  
 ]
 
 # ミドルウェアの設定
@@ -106,3 +108,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # モデルのデフォルト設定
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'   # ログイン後のリダイレクト先
+LOGOUT_REDIRECT_URL = '/' 
