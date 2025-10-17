@@ -16,7 +16,8 @@ class Rental(models.Model):
     brand = models.CharField(max_length=100, blank=True, null=True)
     condition = models.CharField(max_length=50, blank=True, null=True)
     color = models.CharField(max_length=100, blank=True, null=True)
-    # 🔥🔥🔥 ここまで追加 🔥🔥🔥
+    is_published = models.BooleanField(default=True) # デフォルトを True にすると便利です
+
     
     def __str__(self):
         return self.name

@@ -1,0 +1,97 @@
+/* static/css/style.css または適切なCSSファイルに追記・修正 */
+
+/* --- 1. セクションヘッダーのスタイル（項目名とボタンを横並び） --- */
+.item-section {
+    margin-bottom: 30px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between; /* 両端揃え */
+    align-items: center;
+    padding: 0 10px; /* 左右に少しパディング */
+    margin-bottom: 10px;
+}
+
+.section-header h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.more-link {
+    color: #007bff; /* リンク色 */
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+/* --- 2. スライダーコンテナと2列表示の維持 --- */
+.slider-wrapper {
+    position: relative; /* 子要素（ボタン）の絶対配置の基準 */
+}
+
+.horizontal-scroll-container {
+    display: flex;
+    overflow-x: scroll; 
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 0 10px; 
+    padding-bottom: 0px; /* スクロールバーのためのスペース */
+    scroll-behavior: smooth; /* スムーズなスクロール動作 */
+    -ms-overflow-style: none; /* IEおよびEdgeの古いバージョンで非表示にする */
+    scrollbar-width: none;    /* Firefoxで非表示にする */
+}
+.horizontal-scroll-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+/* 🚨 3. 商品カードの幅を調整 */
+.product-card {
+    flex-shrink: 0; 
+    width: 45%; 
+    max-width: 170px; /* 大きな画面での広がりすぎ防止 */
+    margin-right: 15px; /* 右側に隙間 */
+    text-align: left;
+}
+
+.product-image {
+    width: 100%;
+    height: auto; 
+    aspect-ratio: 1 / 1; /* 正方形を維持 */
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.no-image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    border-radius: 4px;
+}
+
+/* --- 4. 左右ナビゲーションボタンのスタイル --- */
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.prev-btn {
+    left: 5px; /* 左端に配置 */
+}
+
+.next-btn {
+    right: 5px; /* 右端に配置 */
+}

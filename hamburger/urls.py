@@ -10,5 +10,7 @@ urlpatterns = [
     path("", views.index, name="index"), 
     
     # 🔥 2. ハンバーガーメニューのステップ管理用URL
-    path("menu/", views.menu_form_view, name="menu"), 
+    path("menu_form/", views.menu_form_view, name="menu_form"), 
+    path('brand_autocomplete/', views.brand_autocomplete, name='brand_autocomplete'),
+
 ]

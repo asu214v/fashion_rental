@@ -1,0 +1,115 @@
+/*==================================================
+  絞り込みフォームUI (ハンバーガーメニュー内)
+==================================================*/
+
+/* フォーム全体への影響 (メニューのスクロール用余白) */
+#left-menu {
+    padding-bottom: 20px; 
+}
+
+/* フォームセクションの共通スタイル */
+.form-section {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select { /* select要素のスタイルも追加（カテゴリ用） */
+    width: 100%;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 価格帯セクションの調整 */
+.price-section input[type="number"] {
+    width: 40%;
+    text-align: center;
+}
+.price-section div {
+    display: flex; /* 価格の区切り記号のためにflexを追加 */
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 性別・タイプ選択ボタン (小さめのボタン) */
+.selection-buttons-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.selection-button-small {
+    flex-grow: 1;
+    padding: 8px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.selection-button-small.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* フォームアクションボタン */
+.form-actions {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.search-submit-btn, .search-reset-btn {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.search-submit-btn {
+    background-color: #007bff; /* 検索ボタンを青色に */
+    color: white;
+}
+.search-reset-btn {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* 検索履歴セクション */
+.search-history-section {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}
+.history-tag {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 5px 10px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* 価格バリデーションエラーメッセージのスタイル (追加) */
+#priceError {
+    color: #dc3545; /* 赤色 */
+    font-size: 13px;
+    margin-top: 5px;
+    display: block; /* JSで切り替えるが、デフォルトはCSSで用意 */
+}

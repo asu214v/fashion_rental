@@ -1,7 +1,5 @@
-// style.js の全内容
-
 // ==========================================================
-// グローバル変数: Color Map & Category Options
+// グローバル変数: Color Map & Category Options & Measurement Options
 // ==========================================================
 const colorMap = {
     "ホワイト": "#f0f0f0",
@@ -19,22 +17,190 @@ const colorMap = {
 };
 
 const categoryOptions = {
-    // 性別（sex）に応じたカテゴリの定義
-    "すべて": ['すべて', 'トップス', 'ジャケット', 'パンツ', 'スカート', 'ワンピース', '靴', 'バッグ', 'アクセサリー', 'その他'],
-    "メンズ": ['すべて', 'トップス', 'ジャケット', 'パンツ', '靴', 'バッグ', 'アクセサリー', 'その他'],
-    "レディース": ['すべて', 'トップス', 'ジャケット', 'パンツ', 'スカート', 'ワンピース', '靴', 'バッグ', 'アクセサリー', 'その他'],
-    "ユニセックス": ['すべて', 'トップス', 'ジャケット', 'パンツ', '靴', 'バッグ', 'アクセサリー', 'その他'],
+    "すべて": ['すべて', 'トップス', 'ジャケット', 'パンツ', 'スカート', 'ワンピース', '靴', 'その他'],
+    "メンズ": ['すべて', 'トップス', 'ジャケット', 'パンツ', '靴', 'その他'],
+    "レディース": ['すべて', 'トップス', 'ジャケット', 'パンツ', 'スカート', 'ワンピース', '靴', 'その他'],
+    "ユニセックス": ['すべて', 'トップス', 'ジャケット', 'パンツ', '靴',  'その他'],
 };
 
 const subCategoryOptions = {
-    // カテゴリ（category）に応じた詳細種類（sub_category）の定義
     "トップス": ['すべて', 'Tシャツ', 'ポロシャツ', 'ニット・セーター', 'シャツ', 'その他'],
-    // 他のカテゴリが必要な場合はここに追加
 };
+
+const measurementOptions = {
+    "すべて": {
+        sizes: ['ーー'],
+        fields: []
+    },
+    "トップス": {
+        sizes: ['ーー', '-XS', 'S', 'M', 'L', 'XL-'], 
+        fields: ['total_length', 'body_width', 'shoulder_width', 'sleeve_length']
+    },
+    "ジャケット": {
+        sizes: ['ーー', '-XS', 'S', 'M', 'L', 'XL-'],
+        fields: ['total_length', 'body_width', 'shoulder_width', 'sleeve_length']
+    },
+    "パンツ": {
+        sizes: ['ーー', '-XS', 'S', 'M', 'L', 'XL-'],
+        fields: ['waist', 'hip', 'length', 'rise', 'inseam', 'thigh', 'hem']
+    },
+    "スカート": {
+        sizes: ['ーー', '-XS', 'S', 'M', 'L', 'XL-'],
+        fields: ['waist', 'hip', 'length']
+    },
+    "ワンピース": {
+        sizes: ['ーー', '-XS', 'S', 'M', 'L', 'XL-'],
+        fields: ['body_width', 'total_length']
+    },
+    "靴": {
+        sizes: [],
+        fields: ['shoe_size']
+    },
+    "バッグ": { sizes: ['すべて'], fields: [] },
+    "アクセサリー": { sizes: ['すべて'], fields: [] },
+    "その他": { sizes: ['すべて'], fields: [] },
+};
+
+/**
+ * 採寸フィールドとサイズ選択フィールドをカテゴリに応じて更新・表示/非表示を切り替える
+ * @param {string} selectedCategory - 現在選択されているカテゴリ
+ * @param {HTMLElement} containerElement - メニュー全体を囲むコンテナ
+ */
+function updateMeasurementFields(selectedCategory, containerElement) {
+    const config = measurementOptions[selectedCategory] || measurementOptions["すべて"];
+    
+    const sizeSelectContainer = containerElement.querySelector('#size_select_container');
+    
+    // --- 1. サイズの選択肢を <select> に更新/生成 ---
+    if (sizeSelectContainer) {
+        sizeSelectContainer.innerHTML = ''; 
+        
+        const select = document.createElement('select');
+        select.name = 'size';
+        select.id = 'id_size_select';
+        select.style.width = '100%'; 
+        select.style.padding = '10px';
+        select.style.border = '1px solid #ccc';
+        select.style.borderRadius = '4px';
+
+        const initialSize = sizeSelectContainer.dataset.initialValue || 'すべて';
+        
+        config.sizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size;
+            option.textContent = size;
+            if (size === initialSize) {
+                option.selected = true;
+            }
+            select.appendChild(option);
+        });
+        
+        sizeSelectContainer.appendChild(select);
+    }
+
+    // --- 2. 採寸詳細フィールドの表示/非表示切り替えと下限/上限入力への調整 ---
+    
+    const allMeasurementFields = containerElement.querySelectorAll('.measurement-field');
+
+    allMeasurementFields.forEach(fieldContainer => {
+        const fieldName = fieldContainer.dataset.name;
+        
+        if (config.fields.includes(fieldName)) {
+            fieldContainer.style.display = 'block';
+            
+            // 下限/上限のプレースホルダーを調整
+            const label = fieldContainer.querySelector('label');
+            if (label) {
+                let labelText = fieldName;
+                // 🚨 新しいshoe_sizeフィールドの表示名を設定
+                if (fieldName === 'shoe_size') labelText = '靴サイズ (cm)'; 
+                if (fieldName === 'total_length') labelText = '着丈/総丈 (cm)';
+                else if (fieldName === 'body_width') labelText = '身幅 (cm)';
+                else if (fieldName === 'shoulder_width') labelText = '肩幅 (cm)';
+                else if (fieldName === 'sleeve_length') labelText = 'そで丈 (cm)';
+                else if (fieldName === 'waist') labelText = 'ウエスト (cm)';
+                else if (fieldName === 'hip') labelText = 'ヒップ (cm)';
+                else if (fieldName === 'length') labelText = '丈 (cm)';
+                else if (fieldName === 'rise') labelText = '股上 (cm)';
+                else if (fieldName === 'inseam') labelText = '股下 (cm)';
+                else if (fieldName === 'thigh') labelText = 'もも回り (cm)';
+                else if (fieldName === 'hem') labelText = 'すそ回り (cm)';
+                
+                label.textContent = labelText;
+            }
+
+        } else {
+            fieldContainer.style.display = 'none';
+            
+            // 非表示にする際、値をクリアしてURLパラメータに含まれないようにする
+            const inputs = fieldContainer.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+        }
+    });
+}
 
 
 // ==========================================================
-// 共通機能: カラーモーダルの初期化関数 (現在のメニュー遷移UIでは未使用の可能性あり)
+// 価格バリデーションロジック
+// ==========================================================
+
+function priceValidationHandler(e) {
+    const form = e.currentTarget;
+    const minPriceInput = form.querySelector('#min_price');
+    const maxPriceInput = form.querySelector('#max_price');
+    const priceErrorDiv = form.querySelector('#priceError'); 
+    
+    if (!minPriceInput || !maxPriceInput || !priceErrorDiv) {
+        return true; 
+    }
+
+    priceErrorDiv.style.display = 'none';
+    priceErrorDiv.textContent = ''; 
+
+    const rawMin = minPriceInput.value.trim();
+    const rawMax = maxPriceInput.value.trim();
+    const minPrice = rawMin === "" ? NaN : Number(rawMin);
+    const maxPrice = rawMax === "" ? NaN : Number(rawMax);
+
+    let hasError = false;
+    let errorMessage = ''; 
+
+    if (rawMin !== "" && (isNaN(minPrice) || minPrice < 0)) {
+        hasError = true;
+        errorMessage = '※下限値は0以上の数値を入力してください。';
+    }
+
+    if (!hasError && rawMax !== "" && (isNaN(maxPrice) || maxPrice < 0)) {
+        hasError = true;
+        errorMessage = '※上限値は0以上の数値を入力してください。';
+    }
+
+    if (!hasError && rawMin !== "" && rawMax !== "" && maxPrice < minPrice) {
+         hasError = true;
+         errorMessage = '※価格の上限は下限以上の値を入力してください。'; 
+    }
+
+    if (hasError) {
+        e.preventDefault();
+        priceErrorDiv.textContent = errorMessage;
+        priceErrorDiv.style.display = 'block';
+        return false;
+    }
+
+    return true;
+}
+
+
+function setupPriceValidation(form) {
+    form.removeEventListener('submit', priceValidationHandler); 
+    form.addEventListener('submit', priceValidationHandler);
+}
+
+
+// ==========================================================
+// 共通機能: カラーモーダルの初期化関数
 // ==========================================================
 function initializeColorModal(containerElement) {
     const openBtn = containerElement.querySelector('#openColorModal');
@@ -46,7 +212,6 @@ function initializeColorModal(containerElement) {
 
     if (!openBtn || !modal || !selectedInput || !displayBanner || colorOptions.length === 0) return; 
 
-    // --- 1. 初期値の表示 ---
     const initialColor = selectedInput.value;
     if (initialColor && colorMap[initialColor]) {
         colorOptions.forEach(radio => {
@@ -64,9 +229,6 @@ function initializeColorModal(containerElement) {
     } else {
         displayBanner.style.display = 'none';
     }
-
-
-    // --- 2. イベントリスナーの登録 ---
 
     openBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
     
@@ -89,9 +251,6 @@ function initializeColorModal(containerElement) {
             displayBanner.style.color = textColor;
             displayBanner.style.border = (selectedValue === 'ホワイト' || selectedValue === 'イエロー' || selectedValue === 'すべて') ? '1px solid #ccc' : 'none';
             displayBanner.style.display = 'inline-block';
-        } else {
-            selectedInput.value = '';
-            displayBanner.style.display = 'none';
         }
         
         modal.style.display = 'none';
@@ -105,16 +264,26 @@ function initializeColorModal(containerElement) {
 }
 
 
-// ===== 階層カテゴリ選択ロジックの初期化 (現在のメニュー遷移UIでは未使用の可能性あり) =====
+// ===== 階層カテゴリ選択ロジックの初期化 =====
 function initializeCategoryLogic(containerElement) {
-    const sexSelect = containerElement.querySelector('#sex');
+    const form = containerElement.querySelector('#searchForm');
+    const sexHiddenInput = form ? form.querySelector('input[type="hidden"][name="sex"]') : null;
     const categorySelect = containerElement.querySelector('#category_select');
     const subCategorySelect = containerElement.querySelector('#sub_category_select');
 
-    if (!sexSelect || !categorySelect) return;
+    if (!categorySelect || !subCategorySelect) return;
     
-    const initialCategory = categorySelect.dataset.initialValue || categorySelect.value;
-    const initialSubCategory = subCategorySelect ? subCategorySelect.dataset.initialValue || subCategorySelect.value : '';
+    const initialSex = sexHiddenInput ? sexHiddenInput.value : 
+                       containerElement.querySelector('.selection-buttons-container button[name="sex"].selected')?.value || 'すべて';
+    
+    const initialCategory = categorySelect.dataset.initialValue || 'すべて';
+    // サイズ記号の初期値を size_select_container にも設定
+    const sizeSelectContainer = containerElement.querySelector('#size_select_container');
+    if (sizeSelectContainer) {
+        sizeSelectContainer.dataset.initialValue = form.querySelector('input[name="size"]')?.value || 'すべて';
+    }
+
+    const initialSubCategory = subCategorySelect ? subCategorySelect.dataset.initialValue || 'すべて' : 'すべて';
 
     function updateCategoryOptions(selectedSex, selectedCategory) {
         categorySelect.innerHTML = ''; 
@@ -125,59 +294,93 @@ function initializeCategoryLogic(containerElement) {
             option.value = category;
             option.textContent = category;
             
-            if (category === selectedCategory || category === initialCategory) {
+            if (category === selectedCategory) {
                 option.selected = true;
             }
             categorySelect.appendChild(option);
         });
         
         updateSubCategoryOptions(categorySelect.value, initialSubCategory);
+        updateMeasurementFields(categorySelect.value, containerElement);
     }
 
     function updateSubCategoryOptions(selectedCategory, selectedSubCategory) {
         if (!subCategorySelect) return;
         
         subCategorySelect.innerHTML = '';
-        const subCategories = subCategoryOptions[selectedCategory] || ['すべて'];
+        const subCategories = subCategoryOptions[selectedCategory];
         
-        if (subCategories.length === 1 && subCategories[0] === 'すべて') {
-             subCategorySelect.style.display = 'none';
-        } else {
-             subCategorySelect.style.display = 'block';
-        }
+        if (!subCategories || (subCategories.length === 1 && subCategories[0] === 'すべて')) {
+            subCategorySelect.style.display = 'block';
+            const dummyOption = document.createElement('option');
+            dummyOption.value = 'すべて';
+            dummyOption.textContent = 'ーー';
+            subCategorySelect.appendChild(dummyOption);
+            return;
+        } 
+        
+        subCategorySelect.style.display = 'block';
 
         subCategories.forEach(sub => {
             const option = document.createElement('option');
             option.value = sub;
             option.textContent = sub;
             
-            if (sub === selectedSubCategory || sub === initialSubCategory) {
+            if (sub === selectedSubCategory) {
                 option.selected = true;
             }
             subCategorySelect.appendChild(option);
         });
     }
 
-    sexSelect.addEventListener('change', (e) => {
-        updateCategoryOptions(e.target.value, 'すべて'); 
+    containerElement.querySelectorAll('button[name="sex"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const newSex = e.target.value;
+            updateCategoryOptions(newSex, 'すべて'); 
+        });
     });
     
     categorySelect.addEventListener('change', (e) => {
-        updateSubCategoryOptions(e.target.value, 'すべて');
+        const newCategory = e.target.value;
+        updateSubCategoryOptions(newCategory, 'すべて');
+        updateMeasurementFields(newCategory, containerElement);
     });
 
-    updateCategoryOptions(sexSelect.value, initialCategory);
+    updateCategoryOptions(initialSex, initialCategory);
+    updateMeasurementFields(categorySelect.value, containerElement);
 }
 
 
 // ==========================================================
-// ハンバーガーメニュー: 画面遷移ロジック (コア機能)
+// ハンバーガーメニュー: 画面遷移ロジック
 // ==========================================================
+
+function disableLinks(exceptLink) {
+    const chatLink = document.querySelector(".chat-link");
+    const notifyLink = document.querySelector(".notify-link");
+    const hamburgerLink = document.querySelector(".hamburger-link");
+
+    [chatLink, notifyLink, hamburgerLink].forEach(link => {
+        if (link && link !== exceptLink) {
+            link.style.pointerEvents = "none";
+        }
+    });
+}
+
+function enableAllLinks() {
+    const chatLink = document.querySelector(".chat-link");
+    const notifyLink = document.querySelector(".notify-link");
+    const hamburgerLink = document.querySelector(".hamburger-link");
+
+    [chatLink, notifyLink, hamburgerLink].forEach(link => {
+        if (link) {
+            link.style.pointerEvents = "auto";
+        }
+    });
+}
 
 function closeLeftMenu() {
     const leftMenu = document.getElementById("left-menu");
-    // enableAllLinks() は省略 (必要に応じて実装してください)
-    
     leftMenu.classList.remove("slide-in");
     setTimeout(() => {
         leftMenu.innerHTML = "";
@@ -187,7 +390,7 @@ function closeLeftMenu() {
 
 function closeRightMenu() {
     const rightMenu = document.getElementById("right-menu");
-    // enableAllLinks() は省略 (必要に応じて実装してください)
+    enableAllLinks();
 
     rightMenu.classList.remove("slide-in");
     setTimeout(() => {
@@ -196,87 +399,165 @@ function closeRightMenu() {
     }, 300);
 }
 
-/**
- * メニュー内のリンククリック時の処理 (主に性別、タイプ、色などの選択画面遷移)
- */
 function handleMenuNavigation(e) {
-    e.preventDefault();
-    const nextUrl = e.currentTarget.getAttribute('href');
-    if (nextUrl) {
-        loadMenuContent(nextUrl);
-    }
+    
 }
 
-/**
- * フォーム送信時の処理 (主にキーワード、価格、サイズ、ブランドの入力画面)
- */
 function handleFormNavigation(e) {
+    
+}
+
+function handleFilterButtonClick(event) {
+    event.preventDefault(); 
+    const button = event.currentTarget;
+    const form = button.closest('form');
+    const groupName = button.getAttribute('name');
+    const currentValue = button.getAttribute('value');
+    
+    form.querySelectorAll(`button[name="${groupName}"]`).forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    button.classList.add('selected');
+
+    let hiddenInput = form.querySelector(`input[type="hidden"][name="${groupName}"]`); 
+    if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = groupName;
+        form.appendChild(hiddenInput);
+    }
+    hiddenInput.value = currentValue;
+}
+
+function handleResetClick(e) {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    
-    // 現在の絞り込みパラメータを取得し、'step'を除外
-    const currentUrlParams = new URLSearchParams(window.location.search);
-    currentUrlParams.delete('step');
-    
-    // フォームの内容をパラメータに追加/上書き
-    for (const [key, value] of formData.entries()) {
-        if (value) {
-            currentUrlParams.set(key, value);
-        } else {
-            currentUrlParams.delete(key);
+    window.location.href = document.querySelector('#searchForm').getAttribute('action'); 
+}
+
+function initializeHiddenInputs(form) {
+    form.querySelectorAll('.selected').forEach(selectedBtn => {
+        const groupName = selectedBtn.getAttribute('name');
+        const currentValue = selectedBtn.getAttribute('value');
+        
+        let hiddenInput = form.querySelector(`input[type="hidden"][name="${groupName}"]`); 
+        if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = groupName;
+            form.appendChild(hiddenInput);
         }
+        hiddenInput.value = currentValue;
+    });
+}
+
+function bindFilterButtons(container) {
+    const form = container.querySelector('#searchForm');
+    if (!form) return; 
+
+    form.querySelectorAll('.selection-button-small, .color-option-btn').forEach(button => {
+        button.removeEventListener('click', handleFilterButtonClick);
+        button.addEventListener('click', handleFilterButtonClick);
+    });
+
+    const resetButton = form.querySelector('.search-reset-btn');
+    if(resetButton) {
+        resetButton.removeAttribute('onclick');
+        resetButton.removeEventListener('click', handleResetClick);
+        resetButton.addEventListener('click', handleResetClick);
     }
     
-    // メインメニューに戻るURLを構築
-    const mainUrl = '/hamburger/menu/'; // DjangoのURL名に依存
-    const nextUrl = `${mainUrl}?step=main&${currentUrlParams.toString()}`;
-
-    loadMenuContent(nextUrl);
+    initializeHiddenInputs(form);
 }
+// JavaScriptコードのどこかに記述
 
-/**
- * 新しいコンテンツに埋め込まれたすべての要素にイベントを再バインド
- */
-function bindMenuLinks(container) {
-    // 1. リンク (<a>) のバインド
-    container.querySelectorAll('a').forEach(link => {
-        // 検索実行ボタンとリセットボタンは標準動作（ページ全体遷移）させる
-        if (link.classList.contains('menu-submit-btn') || link.classList.contains('menu-reset-btn')) {
-            return; 
-        }
-        
-        const href = link.getAttribute('href');
-        // 外部リンクやJS実行リンクは対象外
-        if (!href || href.startsWith('#') || href.startsWith('javascript:') || !href.includes('/menu/')) return; 
-
-        link.removeEventListener('click', handleMenuNavigation);
-        link.addEventListener('click', handleMenuNavigation);
-    });
+function setupBrandAutocomplete() {
+    // 1. jQueryとjQuery UIが読み込まれているか確認
+    if (typeof jQuery === 'undefined' || typeof jQuery.ui === 'undefined') {
+        console.warn("jQuery UI Autocompleteに必要なライブラリがロードされていません。ブランド入力は通常のテキストフィールドとして動作します。");
+        return;
+    }
     
-    // 2. フォーム (<form>) のバインド
-    container.querySelectorAll('form').forEach(form => {
-        form.removeEventListener('submit', handleFormNavigation);
-        form.addEventListener('submit', handleFormNavigation);
-    });
+    const brandInput = $('#id_brand');
+    const autocompleteUrl = '/hamburger/brand_autocomplete/'; // 🚨 urls.pyで設定したURL
 
-    // 3. (必要なら) カラーモーダルなどの初期化を再実行
-    // initializeColorModal(container); 
-    // initializeCategoryLogic(container);
+    brandInput.autocomplete({
+        // ユーザーが3文字以上入力したときから候補の検索を開始
+        minLength: 2, 
+        
+        source: function(request, response) {
+            // request.term にはユーザーが入力した文字が入る
+            $.ajax({
+                url: autocompleteUrl,
+                data: {
+                    term: request.term
+                },
+                dataType: "json",
+                success: function(data) {
+                    // Djangoビューから返されたJSONデータ (ブランド名のリスト) を利用
+                    response(data);
+                },
+                error: function() {
+                    console.error("ブランド候補の取得に失敗しました。");
+                    response([]); // エラー時は空のリストを返す
+                }
+            });
+        },
+        
+        // 候補が選択されたときの処理
+        select: function(event, ui) {
+            // 選択されたブランド名をテキストフィールドにセット
+            brandInput.val(ui.item.value); 
+            // フォームを送信したい場合はここで submit() を実行
+            // brandInput.closest('form').submit();
+            return false; // Autocompleteのデフォルトの挙動をキャンセル
+        }
+    });
 }
 
 
-/**
- * メニューコンテンツのロードと表示を担うメイン関数
- */
+// DOMContentLoaded内でオートコンプリートを設定
+document.addEventListener("DOMContentLoaded", () => {
+    // ... (既存のDOMContentLoaded内の処理) ...
+
+    // 検索フォームがロードされた後に実行
+    const staticSearchForm = document.getElementById('searchForm');
+    if (staticSearchForm) {
+        // ... (既存の処理) ...
+        setupBrandAutocomplete(); // 🚨 追加
+    }
+});
+
+// もしハンバーガーメニュー内で動的にフォームがロードされるなら、
+// bindMenuLinks 関数内でも setupBrandAutocomplete() を呼び出します。
+function bindMenuLinks(container) {
+    // ... (既存の処理) ...
+    
+    const searchForm = container.querySelector('#searchForm');
+    if (searchForm) {
+        // ... (既存の処理) ...
+        setupBrandAutocomplete(); // 🚨 追加
+    }
+    
+    // ...
+}
+
+function bindMenuLinks(container) {
+    bindFilterButtons(container);
+    
+    const searchForm = container.querySelector('#searchForm');
+    if (searchForm) {
+        setupPriceValidation(searchForm);
+    }
+    
+    initializeCategoryLogic(container); 
+}
+
+
 async function loadMenuContent(url, isInitial = false) {
     const leftMenu = document.getElementById("left-menu");
-    const closeBtnHtml = `<span class="close-btn">&times;</span>`;
     
-    // ロード中はスピナーなどを表示するとUX向上
     if (!isInitial) {
-        leftMenu.innerHTML = `${closeBtnHtml}<p style="padding: 20px; text-align: center;">読み込み中...</p>`;
-        leftMenu.querySelector(".close-btn").addEventListener("click", closeLeftMenu);
+        leftMenu.innerHTML = `<p style="padding: 20px; text-align: center;">読み込み中...</p>`;
     }
 
     try {
@@ -288,34 +569,26 @@ async function loadMenuContent(url, isInitial = false) {
         
         const text = await response.text();
         
-        // 1. アニメーション制御 (初回ロード時のみスライドアニメーションを実行)
         if (isInitial) {
             leftMenu.className = "from-left";
             void leftMenu.offsetWidth;
             leftMenu.classList.add("slide-in");
         }
         
-        // 2. コンテンツの置き換え
-        // メニューのHTML全体を置き換え、スクロール領域のパディング調整
-        leftMenu.innerHTML = `${closeBtnHtml}<div id="menu-content-container">${text}</div>`;
+        leftMenu.innerHTML = `<div id="menu-content-container">${text}</div>`;
         
-        // 3. イベントの再バインド
-        leftMenu.querySelector(".close-btn").addEventListener("click", closeLeftMenu);
-            
-        bindMenuLinks(leftMenu);
+        bindMenuLinks(leftMenu); 
 
     } catch(error) {
         console.error("メニューコンテンツの読み込みに失敗しました:", error);
         
-        // エラー詳細をユーザーに表示
-        leftMenu.innerHTML = `${closeBtnHtml}<p style="padding: 20px;">コンテンツの読み込み中にエラーが発生しました。<br>詳細: ${error.message || '不明なエラー'}</p>`;
-        leftMenu.querySelector(".close-btn").addEventListener("click", closeLeftMenu);
+        leftMenu.innerHTML = `<p style="padding: 20px;">コンテンツの読み込み中にエラーが発生しました。<br>詳細: ${error.message || '不明なエラー'}</p>`;
     }
 }
 
 
 // ==========================================================
-// DOMContentLoaded (ページ読み込み完了時) の処理
+// DOMContentLoaded
 // ==========================================================
 document.addEventListener("DOMContentLoaded", () => {
     const rightMenu = document.getElementById("right-menu");
@@ -324,26 +597,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatLink = document.querySelector(".chat-link");
     const notifyLink = document.querySelector(".notify-link");
     const hamburgerLink = document.querySelector(".hamburger-link");
-
-    // ===== リンク無効化/有効化 (再定義) =====
-    // 閉じるボタンの実装に必要なため、簡略化して残します。
-    function disableLinks(exceptLink) {
-        [chatLink, notifyLink, hamburgerLink].forEach(link => {
-            if (link && link !== exceptLink) {
-                link.style.pointerEvents = "none";
-            }
-        });
-    }
-
-    function enableAllLinks() {
-        [chatLink, notifyLink, hamburgerLink].forEach(link => {
-            if (link) {
-                link.style.pointerEvents = "auto";
-            }
-        });
+    const hamburgerIcon = hamburgerLink ? hamburgerLink.querySelector(".icon") : null;
+    
+    function closeLeftMenuWrapper(e) {
+        e.preventDefault();
+        
+        closeLeftMenu();
+        enableAllLinks();
+        
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '&#9776;';
+            
+            hamburgerLink.removeEventListener('click', closeLeftMenuWrapper);
+            hamburgerLink.addEventListener('click', loadLeftMenuWrapper);
+        }
     }
     
-    // ===== 右側メニューの開閉 (修正版) =====
+    async function loadLeftMenuWrapper(e) {
+        e.preventDefault();
+        
+        await loadLeftMenu(e); 
+        
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '&times;';
+            
+            hamburgerLink.removeEventListener('click', loadLeftMenuWrapper);
+            hamburgerLink.addEventListener('click', closeLeftMenuWrapper);
+        }
+    }
+    
     async function loadRightMenu(e) {
         e.preventDefault();
         disableLinks(e.currentTarget);
@@ -352,7 +634,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(url);
             const text = await response.text();
             
-            // 右メニューはHTMLをそのまま表示
             rightMenu.innerHTML = `<span class="close-btn">&times;</span><div>${text}</div>`;
 
             rightMenu.className = "from-right";
@@ -366,25 +647,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ===== 左側メニューの開閉 (loadMenuContentを使用するように修正) =====
     async function loadLeftMenu(e) {
         const target = e.currentTarget || document.querySelector(".hamburger-link");
-        if (e && e.preventDefault) e.preventDefault();
         
-        // リンク無効化 (メニューを開いている間は他のヘッダーアイコンを無効にする)
         disableLinks(target);
 
-        // 初回ロード時は、必ず /hamburger/menu/ にリクエスト
-        const url = "/hamburger/menu/"; 
-        
-        // 既存のURLパラメータを引き継ぐ (例: ?sex=メンズ)
+        const url = "/hamburger/menu_form/"; 
         const currentParams = window.location.search;
-        const fullUrl = currentParams ? `${url}?step=main${currentParams.replace('?', '&')}` : `${url}?step=main`;
+        const fullUrl = url + currentParams;
 
-        await loadMenuContent(fullUrl, true); // trueで初回アニメーション実行
+        await loadMenuContent(fullUrl, true);
     }
     
-    // ===== 出品フォーム機能: カメラと初期化 (要素が存在する場合のみ実行) =====
     const video = document.getElementById("camera");
     const captureButton = document.getElementById("capture");
     const cameraErrorMessage = document.getElementById("cameraErrorMessage");
@@ -393,7 +667,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const context = canvas.getContext("2d");
         const container = document.getElementById("capturedImagesContainer");
         
-        // --- 1. カメラ起動 ---
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(stream => video.srcObject = stream)
         .catch(err => {
@@ -403,7 +676,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cameraErrorMessage) cameraErrorMessage.style.display = 'block';
         });
         
-        // --- 2. 撮影 ---
         captureButton.addEventListener("click", () => {
             if (!canvas) return;
             
@@ -426,19 +698,27 @@ document.addEventListener("DOMContentLoaded", () => {
             container.appendChild(input);
         });
 
-        // --- 3. 出品フォームのカラーモーダル初期化 ---
         initializeColorModal(document); 
     }
     
-    // ===== イベント登録 =====
     chatLink?.addEventListener("click", loadRightMenu);
     notifyLink?.addEventListener("click", loadRightMenu);
-    hamburgerLink?.addEventListener("click", loadLeftMenu);
+    
+    hamburgerLink?.addEventListener("click", loadLeftMenuWrapper);
 
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             closeRightMenu();
-            closeLeftMenu();
+            if (leftMenu.classList.contains('slide-in')) {
+                 closeLeftMenuWrapper(e);
+            }
         }
     });
+
+    const staticSearchForm = document.getElementById('searchForm');
+    if (staticSearchForm) {
+        setupPriceValidation(staticSearchForm);
+        bindFilterButtons(document);
+        initializeCategoryLogic(document);
+    }
 });

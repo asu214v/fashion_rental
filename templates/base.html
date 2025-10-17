@@ -5,15 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Fashion Rental{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 </head>
 <body>
 
   <!-- ヘッダー -->
   <header class="header">
     <div class="hamburger">
-      <a href="{% url 'hamburger:menu' %}" class="hamburger-link">
+      <a href="{% url 'hamburger:menu_form' %}" class="hamburger-link">
         <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="icon">
       </a>
     </div>

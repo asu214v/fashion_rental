@@ -1,0 +1,27 @@
+{% load static %}
+{% load humanize %}
+
+<div class="slider-wrapper">
+    
+    <button class="slider-nav prev-btn">‹</button>
+    <button class="slider-nav next-btn">›</button>
+
+    <div class="horizontal-scroll-container">
+        {% for item in items %}
+        <div class="product-card">
+            <a href="{% url 'items:detail' item.id %}">
+                {% if item.main_image %}
+                <img src="{{ item.main_image.url }}" alt="{{ item.name }}" class="product-image">
+                {% else %}
+                <div class="no-image-placeholder">No Image</div>
+                {% endif %}
+                
+                <div class="product-info">
+                    <p class="product-name">{{ item.name|truncatechars:15 }}</p>
+                    <p class="product-price">¥{{ item.price|intcomma }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
