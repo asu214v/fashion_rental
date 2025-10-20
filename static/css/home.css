@@ -54,6 +54,25 @@
     text-align: left;
 }
 
+/* horizontal_item_slider.htmlのリンクスタイルを調整 */
+.product-card a {
+    /* リンクの下線を削除 */
+    text-decoration: none !important; 
+    
+    /* 文字の色を親要素から継承（通常は黒または濃いグレー） */
+    color: inherit !important; 
+    
+    /* 必要に応じて、ホバー時のスタイルも調整 */
+    /* &:hover {
+        color: #555; 
+    } */
+}
+
+/* 商品名のリンク色を明示的に黒にする場合 */
+.product-card .product-info {
+    color: #333; /* またはあなたのブランドの標準色 */
+}
+
 .product-image {
     width: 100%;
     height: auto; 
