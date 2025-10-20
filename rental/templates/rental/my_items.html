@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>あなたの出品商品一覧</h1>
+
+<div style="display:flex; flex-wrap: wrap; gap: 20px;">
+    {% for rental in rentals %}
+    <a href="{% url 'items:detail' rental.id %}" style="text-decoration:none; color:inherit;">
+        <div class="item-card" style="border:1px solid #ccc; border-radius:8px; padding:10px; width:200px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            {% if rental.images.all %}
+              <div class="image-box" style="width: 100%; height: 200px; overflow: hidden; margin: 0 auto 10px;">
+                <img src="{{ rental.images.all.0.image.url }}" class="item-image">
+              </div>
+              {% else %}
+                <div style="width:100%; height:200px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:4px; margin-bottom: 10px;">No Image</div>
+            {% endif %}
+            
+            <p class="item-name">{{ rental.name }}</p>
+            
+            <div style="margin-top: 5px;">
+                <strong>¥</strong> {{ rental.price|floatformat:"0" }}
+            </div>
+            
+            </div>
+    </a>
+    {% empty %}
+        <p>現在、出品している商品はありません。</p>
+    {% endfor %}
+</div>
+{% endblock %}

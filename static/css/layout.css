@@ -1,0 +1,77 @@
+/*==================================================
+  ヘッダー & フッター & メインコンテンツ
+==================================================*/
+
+/* ヘッダー */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #fff;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+}
+
+.header-icons,
+.hamburger {
+    display: flex;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* フッター */
+footer.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45px;
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.1); 
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.footer-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    font-size: 12px;
+}
+
+.footer-nav a .icon {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+
+/* コンテンツ部分だけスクロール */
+main#content {
+    position: absolute;
+    top: 50px;
+    bottom: 45px;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #fafafa;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}

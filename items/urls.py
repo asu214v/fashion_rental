@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
 
-app_name = "items"  # ← namespaceを登録
+app_name = "items"
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.all_items, name="all_items"),
+    path("<int:rental_id>/", views.item_detail, name="detail"),
+    path('<int:rental_id>/reviews/', views.review_detail, name='review_detail'), 
 ]

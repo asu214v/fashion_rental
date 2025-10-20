@@ -1,0 +1,29 @@
+{% load static %}
+{% load humanize %}
+
+<div class="slider-wrapper">
+    
+    <button class="slider-nav prev-btn">‹</button>
+    <button class="slider-nav next-btn">›</button>
+
+    <div class="horizontal-scroll-container">
+        {% for item in items %}
+        <div class="product-card">
+            <a href="{% url 'items:detail' item.id %}">
+                {% if item.images.all %}
+                    <div class="image-box" style="width: 100%; height: 200px; overflow: hidden; margin: 0 auto 10px;">
+                        <img src="{{ item.images.all.0.image.url }}" class="item-image">
+                    </div>
+                {% else %}
+                    <div style="width:100%; height:200px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:4px; margin-bottom: 10px;">No Image</div>
+                {% endif %}
+                
+                <div class="product-info">
+                    <p class="product-name">{{ item.name|truncatechars:15 }}</p>
+                    <p class="product-price">¥{{ item.price|intcomma }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("", include('home.urls')),
     path('admin/', admin.site.urls),
+    path('home/', include('home.urls')),
+    path('rental/', include('rental.urls')),
     path('users/', include('users.urls')),
     path('items/', include('items.urls')),
     path('rental/', include('rental.urls')),
@@ -28,5 +32,9 @@ urlpatterns = [
     path('favorite/', include('favorite.urls')),
     path('schedule/', include('schedule.urls')),
     path('hamburger/', include('hamburger.urls')),
+    path('accounts/', include('accounts.urls')),
     # 他のアプリのパスもここに追加
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

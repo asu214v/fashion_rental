@@ -1,8 +1,48 @@
-{% extends "base.html" %}
-
-{% block title %}ホーム{% endblock %}
+{% extends "base.html" %} 
+{% load static %}
 
 {% block content %}
-  <h1>ホームページ</h1>
-  <p>おすすめ商品などをここに表示</p>
+<main class="home-page-content">
+    
+    <section class="item-section">
+        <header class="section-header">
+            <h2>NEWアイテム</h2>
+            <a href="{% url 'hamburger:index' %}" class="more-link">もっと見る</a>
+        </header>
+        {% include "home/includes/horizontal_item_slider.html" with items=new_items %}
+    </section>
+
+    <section class="item-section">
+        <header class="section-header">
+            <h2>新品のアイテム</h2>
+            <a href="{% url 'hamburger:index' %}?type=新品" class="more-link">もっと見る</a>
+        </header>
+        {% include "home/includes/horizontal_item_slider.html" with items=new_type_items %}
+    </section>
+
+    <section class="item-section">
+        <header class="section-header">
+            <h2>古着の商品</h2>
+            <a href="{% url 'hamburger:index' %}?type=古着" class="more-link">もっと見る</a>
+        </header>
+        {% include "home/includes/horizontal_item_slider.html" with items=used_type_items %}
+    </section>
+    
+    <section class="item-section">
+        <header class="section-header">
+            <h2>カテゴリー別：トップス</h2>
+            <a href="{% url 'hamburger:index' %}?category=トップス" class="more-link">もっと見る</a>
+        </header>
+        {% include "home/includes/horizontal_item_slider.html" with items=top_items %}
+    </section>
+    
+    <section class="item-section">
+        <header class="section-header">
+            <h2>5000円以下の商品</h2>
+            <a href="{% url 'hamburger:index' %}?price_max=5000" class="more-link">もっと見る</a>
+        </header>
+        {% include "home/includes/horizontal_item_slider.html" with items=cheap_items %}
+    </section>
+
+</main>
 {% endblock %}

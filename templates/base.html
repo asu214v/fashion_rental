@@ -5,26 +5,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Fashion Rental{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+  <link rel="stylesheet" href="{% static 'css/form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 </head>
 <body>
 
   <!-- ヘッダー -->
   <header class="header">
     <div class="hamburger">
-      <a href="{% url 'hamburger:index' %}" class="hamburger">
-        <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="hamburger">
+      <a href="{% url 'hamburger:menu_form' %}" class="hamburger-link">
+        <img src="{% static 'images/hamburger.png' %}" alt="ハンバーガー" class="icon">
       </a>
     </div>
-      </nav>
-      <div class="header-icons">
-        <a href="{% url 'chat:index' %}" class="chat-link">
-          <img src="{% static 'images/chat.png' %}" alt="チャット" class="icon">
-        </a>
-        <a href="{% url 'notification:index' %}" class="notify-link">
-          <img src="{% static 'images/notification.png ' %}" alt="通知" class="icon">
-        </a>
-      </div>
+    <div class="header-icons">
+      <a href="{% url 'chat:index' %}" class="chat-link">
+        <img src="{% static 'images/chat.png' %}" alt="チャット" class="icon">
+      </a>
+      <a href="{% url 'notification:index' %}" class="notify-link">
+        <img src="{% static 'images/notification.png ' %}" alt="通知" class="icon">
+      </a>
+    </div>
   </header>
 
   <!-- コンテンツ -->
@@ -33,8 +38,8 @@
     {% endblock %}
   </main>
 
-  <!-- オーバーレイ（右からスライド用） -->
-  <div id="overlay"></div>
+  <div id="right-menu" class="right"></div>
+  <div id="left-menu" class="left"></div>
 
     <footer class="footer">
       <nav class="footer-nav">

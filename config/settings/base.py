@@ -10,8 +10,12 @@ SECRET_KEY = 'django-insecure-your-secret-key'
 # デバッグモードの設定 (ローカル環境で上書きされる)
 DEBUG = True
 
-# アクセスを許可するホスト
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1', 
+    'localhost',
+    '172.19.0.194',  # 🚨 この行をリストに追加してください
+    '192.168.1.5'              # 開発中は一時的にこれも有効にしておくと安全です
+]
 
 # アプリケーションの登録
 INSTALLED_APPS = [
@@ -21,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     # ここに自分で作ったアプリを登録
     'users.apps.UsersConfig',
     'items.apps.ItemsConfig',
@@ -30,7 +35,8 @@ INSTALLED_APPS = [
     'notification.apps.NotificationConfig',
     'favorite.apps.FavoriteConfig',
     'schedule.apps.ScheduleConfig',
-    'hamburger.apps.HamburgerConfig',
+    'hamburger.apps.HamburgerConfig', 
+    'accounts.apps.AccountsConfig',  
 ]
 
 # ミドルウェアの設定
@@ -106,3 +112,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # モデルのデフォルト設定
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'   # ログイン後のリダイレクト先
+LOGOUT_REDIRECT_URL = '/' 
